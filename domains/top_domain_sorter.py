@@ -1,8 +1,8 @@
-import csv
 import gzip
 import json
-import tldextract
 from collections import Counter
+
+import tldextract
 
 input_file = "ref-wiki-en_urls.txt.gz"
 
