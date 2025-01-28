@@ -116,7 +116,7 @@ def download_warc_files(warc_paths, max_paths=None):
         counter = 0
 
         for warc_path in islice(infile, max_paths or None):
-            if not found_checkpoint:
+            if last_processed_file and not found_checkpoint:
                 if warc_path.strip() == last_processed_file:
                     found_checkpoint = True
                 continue
