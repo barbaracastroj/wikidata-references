@@ -121,13 +121,15 @@ def download_warc_files(warc_paths, max_paths=None):
                     found_checkpoint = True
                 continue
 
-            output_file = f"{warc_path.strip().replace('/', '-')}"
+            output_file = f"warc-docs/{warc_path.strip().replace('/', '-')}"
             url = f"{COMMON_CRAWL_URL}/{warc_path.strip()}"
 
             success = download_file(url, output_file)
 
             if success:
-                count = filter_warc_documents(output_file, f"filtered-{output_file}")
+                count = filter_warc_documents(
+                    output_file, f"warc-docs/filtered-{os.path.basename(output_file)}"
+                )
                 counter += count
 
                 save_checkpoint(warc_path)
