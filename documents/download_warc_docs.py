@@ -35,7 +35,7 @@ def filter_warc_documents(input_file, output_file):
     start_time = time.time()
     filtered_count = 0
 
-    domains = read_top_domains(TOP_DOMAINS_URL)
+    domains = read_top_domains(TOP_DOMAINS_URL, 1000)
     unique_domains = set(domains)
 
     with gzip.open(input_file, "rb") as input_f, gzip.open(
@@ -121,14 +121,15 @@ def download_warc_files(warc_paths, max_paths=None):
                     found_checkpoint = True
                 continue
 
-            output_file = f"warc-docs/{warc_path.strip().replace('/', '-')}"
+            output_file = f"warc-docs-1000/{warc_path.strip().replace('/', '-')}"
             url = f"{COMMON_CRAWL_URL}/{warc_path.strip()}"
 
             success = download_file(url, output_file)
 
             if success:
                 count = filter_warc_documents(
-                    output_file, f"warc-docs/filtered-{os.path.basename(output_file)}"
+                    output_file,
+                    f"warc-docs-1000/filtered-{os.path.basename(output_file)}",
                 )
                 counter += count
 
