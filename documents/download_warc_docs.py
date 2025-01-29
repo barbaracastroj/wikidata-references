@@ -28,15 +28,12 @@ def read_top_domains(file_path, max_lines=None):
     return top_domains
 
 
-def filter_warc_documents(input_file, output_file):
+def filter_warc_documents(input_file, output_file, domains):
 
     print(f"Filtrando archivo {input_file}")
 
     start_time = time.time()
     filtered_count = 0
-
-    domains = read_top_domains(TOP_DOMAINS_URL, 1000)
-    unique_domains = set(domains)
 
     with gzip.open(input_file, "rb") as input_f, gzip.open(
         output_file, "wb"
@@ -52,7 +49,7 @@ def filter_warc_documents(input_file, output_file):
                     extracted = tldextract.extract(uri)
                     registered_domain = f"{extracted.domain}.{extracted.suffix}"
 
-                    if registered_domain and registered_domain in unique_domains:
+                    if registered_domain and registered_domain in domains:
                         try:
                             writer.write_record(record)
                             filtered_count += 1
@@ -106,7 +103,7 @@ def download_file(url, output_file):
         return False
 
 
-def download_warc_files(warc_paths, max_paths=None):
+def download_warc_files(warc_paths, domains, max_paths=None):
     start_time = time.time()
 
     last_processed_file = load_checkpoint()
@@ -121,7 +118,7 @@ def download_warc_files(warc_paths, max_paths=None):
                     found_checkpoint = True
                 continue
 
-            output_file = f"warc-docs-1000/{warc_path.strip().replace('/', '-')}"
+            output_file = f"warc-docs/{warc_path.strip().replace('/', '-')}"
             url = f"{COMMON_CRAWL_URL}/{warc_path.strip()}"
 
             success = download_file(url, output_file)
@@ -129,7 +126,8 @@ def download_warc_files(warc_paths, max_paths=None):
             if success:
                 count = filter_warc_documents(
                     output_file,
-                    f"warc-docs-1000/filtered-{os.path.basename(output_file)}",
+                    f"warc-docs/filtered-{os.path.basename(output_file)}",
+                    domains,
                 )
                 counter += count
 
@@ -146,4 +144,5 @@ def download_warc_files(warc_paths, max_paths=None):
 
 
 if __name__ == "__main__":
-    download_warc_files(WARC_PATHS, 100)
+    domains = set(read_top_domains(TOP_DOMAINS_URL))
+    download_warc_files(WARC_PATHS, domains)
