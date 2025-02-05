@@ -1,4 +1,5 @@
 wikidata-env/
-documents/warc-docs/*
 documents/experiments/*
 documents/log.txt
+documents/warc-docs/*
+documents/wet-docs/*
