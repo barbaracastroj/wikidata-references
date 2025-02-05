@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SCRIPT_NAME="download_warc_docs.py"
-SCRIPT_PATH="/ruta/a/wikidata-references-documents/$SCRIPT_NAME"
-VENV_PATH="/home/barbara/Documents/wikidata-references/wikidata-env"
+SCRIPT_PATH="path/to/wikidata-references/documents/$SCRIPT_NAME"
+VENV_PATH="path/to/wikidata-references/wikidata-env"
 SCREEN_NAME="warc_download"
-LOG_FILE="/ruta/a/wikidata-references-documents/log.txt"
+LOG_FILE="path/to/wikidata-references/documents/log.txt"
 
 log() {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" >> "$LOG_FILE"
